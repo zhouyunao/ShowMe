@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+h1 {
+  padding: 15px;
+  color: #000000;
+  text-align: center;
+  font-weight: bold;
+}
+
+table.table01 {
+	width:100%;
+	border-right:#3EB1C6 solid 1px;
+	border-collapse: collapse;
+}
+table.table01 thead th {
+	background:#3EB1C6;
+	color:#FFF;
+	padding:10px 15px;
+	border-right:#FFF solid 1px;
+	border-bottom:#FFF solid 1px;
+}
+table.table01 thead th:last-child {
+	border-right:#3EB1C6 solid 1px;
+}
+table.table01 tbody th {
+	background:#3EB1C6;
+	color:#FFF;
+	padding:10px 15px;
+	border-bottom:#FFF solid 1px;
+	vertical-align:top;
+}
+table.table01 tbody tr:last-child th {
+	border-bottom:#3EB1C6 solid 1px;
+}
+table.table01 tbody td {
+	background:#FFF;
+	padding:10px 15px;
+	border-left:#3EB1C6 solid 1px;
+	border-bottom:#3EB1C6 solid 1px;
+	vertical-align:top;
+}
+
+@media screen and (max-width: 640px) {
+table.table01 thead {
+	display:none;
+}
+table.table01 tbody th {
+	display:block;
+}
+table.table01 tbody td {
+	display:block;
+}
+table.table01 tbody td::before {
+	content: attr(label);
+	float: left;
+	clear:both;
+	font-weight:bold;
+}
+table.table01 tbody td p {
+	padding-left:6em;
+}
+}
+</style>
+<script src="http://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+</head>
+<body>
+<h1>{{heading}}</h1>
+<div id="result" class="demo"></div>
+<script type="text/javascript">
+    function test_func(list) {
+      var tb = d3.select("#result").append("table").classed("table01",true);
+      var thead = tb.append("thead")
+          .append("tr")
+          .selectAll('th')
+          .data(function(row){
+              return d3.entries(list[0])
+          })
+          .enter()
+          .append('th')
+          .text(function(d){
+            return d.key;
+          })
+          //console.log(d3.entries(list[0]))
+      var tbody = tb.append("tbody")    // table要素を追加
+          .selectAll("tr")    // tr要素を対象にする
+          .data(list) // 出力するデータ
+          .enter()    // データ数だけ要素を生成
+          .append("tr")
+          .selectAll("td")
+          .data(function(row){    // 1行ごとにデータを返す
+              return d3.entries(row); // key, valueを返す
+          })
+          .enter()
+          .append("td")   // td要素を追加
+          .text(function(d){
+              return d.value; // valueが配列要素の値
+          })
+          //console.log('end')
+    }
+    var data = {{schedule|safe}} //&#39;エラー対策-->safe
+    test_func(data)
+</script>
+</body>
+</html>
